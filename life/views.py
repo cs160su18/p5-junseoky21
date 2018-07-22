@@ -9,7 +9,11 @@ def index(request):
 def view(request):
     all_groups = Group.objects.all()
     return render(request, 'life/view.html', {"groups": all_groups})
-    
+
 def enter(request):
     all_groups = Group.objects.all()
     return render(request, 'life/enter.html', {"groups": all_groups})
+
+def make_review(request):
+    all_restaurants = Restaurant.objects.all()
+    return render(request, 'life/makereview.html', {"restaurants": all_restaurants})

@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+	<head>
+    <title> Create a Review</title>
+  </head>
+  <body>
+    <h1> Input a Review </h1>
+    <form>
+      <h3> Pick a Restaurant </h3> <br>
+      {% for restaurant in restaurants %}
+      <input type="radio" name="restaurant" value={{restaurant.name}} checked> {{restuarant.name}}<br>
+      {% endfor %}
+      <h3> Title </h3> <br>
+      <input type = "text" name = "title"><br>
+      <h3> Content </h3> <br>
+      <input type="text" cols="40" rows="5" name = "content"><br>
+      <input type = "submit" value = "Submit Review"> <br>
+    </form>
+  </body>
+</html>

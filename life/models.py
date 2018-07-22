@@ -7,8 +7,6 @@ class Group(models.Model):
 
 class Customer(models.Model):
 	name = models.CharField(max_length=64)
-	joined = models.DateTimeField(auto_now_add=True)
-	preference = models.CharField(max_length=512)
 
 class Restaurant(models.Model):
 	name = models.CharField(max_length=64)

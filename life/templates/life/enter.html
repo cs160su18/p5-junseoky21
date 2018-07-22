@@ -4,7 +4,7 @@
 
 <html>
 	<head>
-		<title>Location data collection</title>
+		<title>Genuine Reviews</title>
 
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
@@ -53,7 +53,7 @@
 		.name-col{
 		  position: relative;
 		  width: 100%;
-		  padding-left:10px;   
+		  padding-left:10px;
 		}
 		.small-img {
 			width: 100px;
@@ -62,7 +62,7 @@
 	  </style>
 	<body>
 		<!-- Your layout here -->
-		
+
 
 		<div id="leaderboard">
 				{% for group in groups%}
@@ -73,7 +73,7 @@
 					<td>User Locations</td>
 				</tr>
 				<tr><td>Username</td><td><input type="text" name="username"></td></tr>
-				
+
 			</table>
 			<!-- {{TreasureData}} -->
 		</div>
@@ -87,7 +87,7 @@
 			var activeUser;
 			var userLines = {};	// takes in username and returns the user's path
 
-			
+
 
 			function htmlDecode(input){
 				var e = document.createElement('div');
@@ -107,20 +107,20 @@
 			function initMap() {
 				map = new google.maps.Map(mapID, {
 					center: {lat: 37.8716, lng: -122.2727},
-					zoom: 18    
+					zoom: 18
 				});
-				
+
 				map.addListener("mousemove", function (ev) {
 					var latitude = ev.latLng.lat();
 					var longitude = ev.latLng.lng();
-					
+
 
 				}); //end addListener
 
 			}
-			
-			
-	
+
+
+
 			function showError(error) {
 				switch(error.code) {
 					case error.PERMISSION_DENIED:
@@ -152,10 +152,10 @@
 				}
 				map.setCenter(latlng);
 				marker.setPosition(latlng);
-	
+
 				return coord;
 			}
-	
+
 		</script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9njv68P5DEaTEdsG1P4jLwcPlzyZNO94&callback=initMap"
 		async defer></script>
