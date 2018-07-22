@@ -72,6 +72,7 @@
 				<tr id="leader-table-heading">
 					<td>User Locations</td>
 				</tr>
+				<tr><td>Username</td><td><input type="text" name="username"></td></tr>
 				
 			</table>
 			<!-- {{TreasureData}} -->
@@ -100,67 +101,16 @@
 					alert("Geolocation is not supported by this browser.");
 				}
 			}
-			serverData = htmlDecode('{{ TreasureData }}');
+			// serverData = htmlDecode('{{ TreasureData }}');
 			// console.log(serverData);
 			function initMap() {
 				map = new google.maps.Map(mapID, {
 					center: {lat: 37.8716, lng: -122.2727},
 					zoom: 18    
 				});
-				serverData =  JSON.parse(serverData);
-				infowindows = [];
-				tempMarkers = [];
-				for (var i = 0; i < serverData.length; i++) {
-					console.log(serverData[i]);
-					$('#leader-table').append("<tr class='leader-table-row'><td class='name-col'>" + serverData[i][0] +"</td><td><a href='http://localhost:8000/draw/img/?img=" + serverData[i][5] + "'>" + serverData[i][1] + "</a></td></tr>");
-					// var bounds = new google.maps.LatLngBounds(
-					// new google.maps.LatLng(serverData[i][0], serverData[i][1]),
-					// new google.maps.LatLng(serverData[i][0] + 1.3, serverData[i][1] + 1.3));
-	
-					// // The photograph is courtesy of the U.S. Geological Survey.
-					// var srcImage = 'https://developers.google.com/maps/documentation/' +
-					//     'javascript/examples/full/images/talkeetna.png';
-					// console.log(srcImage);
-					// // The custom USGSOverlay object contains the USGS image,
-					// // the bounds of the image, and a reference to the map.
-					// overlay = new USGSOverlay(bounds, srcImage, map);
-					var contentString = '<div id="content">'+
-						'<h1 id="firstHeading" class="firstHeading">{}</h1>'.format(serverData[i][1]) +
-						'<div id="bodyContent">'+
-						"<img class='small-img' src='http://localhost:8000/draw/img/?img={}'>".format(serverData[i][5]) +
-						'<p>{}</p>'.format(serverData[i][2]) +
-						'<p>Latitude: {}, Logitude:{} </p>'.format(serverData[i][3], serverData[i][4])+
-						'</div>'+
-						'</div>';
-	
-					var infowindow = new google.maps.InfoWindow({
-						content: contentString
-					});
-					infowindows.push(infowindow);
-					var tempMarker = new google.maps.Marker({
-						position: {lat: parseFloat(serverData[i][3]), lng: parseFloat(serverData[i][4])},
-						map: map,
-						title: "Treasure: " + serverData[i][1]
-					});
-					tempMarkers.push(tempMarker);
-					google.maps.event.addListener(tempMarker,'click', (function(tempMarker,contentString,infowindow){ 
-						return function() {
-							infowindow.setContent(contentString);
-							infowindow.open(map,tempMarker);
-						};
-					})(tempMarker,contentString,infowindow));  
-				}
-				getLocation();
-				marker = new google.maps.Marker({
-					position: {lat: 37.8716, lng: -122.2727},
-					map: map,
-					title: "You're Here"
-				})
-				setInterval(function () {
-				// console.log('it works' + new Date());
-					getLocation();
-				},3000);
-				// google.maps.event.addListener(marker, 'click', function() {window.location.href = marker.url;});
+				// serverData =  JSON.parse(serverData);
+
+
 			}
 			
 			
