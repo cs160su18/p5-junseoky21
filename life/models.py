@@ -7,15 +7,13 @@ class Group(models.Model):
 
 class Customer(models.Model):
 	name = models.CharField(max_length=64)
-	joined = models.DateTimeField(auto_now_add=True)
-	preference = models.CharField(max_length=512)
 
 class Restaurant(models.Model):
 	name = models.CharField(max_length=64)
 	latitude = models.FloatField()
 	longitude = models.FloatField()
-	rating = models.FloatField()
-	joined = models.DateTimeField(auto_now_add=True)
+	# rating = models.FloatField()
+	# joined = models.DateTimeField(auto_now_add=True)
 
 class Review(models.Model):
 	title = models.CharField(max_length=64)
@@ -30,3 +28,5 @@ class LocationLogs(models.Model):
 	datetime = models.DateTimeField(auto_now_add=True)
 	latitude = models.FloatField()
 	longitude = models.FloatField()
+
+
