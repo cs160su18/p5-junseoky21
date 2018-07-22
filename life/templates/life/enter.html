@@ -7,11 +7,11 @@
 		<title>Location data collection</title>
 
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
-		<link rel="stylesheet" type="text/css" href="{% static '/life/vendors/bootstrap/css/bootstrap.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
 		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
 
-		<script src="{% static '/life/vendors/jquery/jquery-3.3.1.min.js' %}"></script>
-		<script src="{% static '/life/vendors/jquery-ui/jquery-ui.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
 	</head>
 	<style>
 		/* Always set the map height explicitly to define the size of the div
@@ -109,7 +109,11 @@
 					zoom: 18    
 				});
 				// serverData =  JSON.parse(serverData);
-
+				google.maps.event.addListener(marker, "click", function(event) {
+					var latitude = event.latlng.lat();
+					var longitude = event.latlng.lng();
+				})
+				console.log( latitude + ', ' + longitude );
 
 			}
 			
