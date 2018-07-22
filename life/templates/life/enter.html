@@ -83,15 +83,18 @@
 			var map;
 			var marker;
 			var mapID = document.getElementById('map');
-	
+			var keyEv = new KeyboardEvent("ctrlKey");
+			var activeUser;
+			var userLines = {};	// takes in username and returns the user's path
+
+			
+
 			function htmlDecode(input){
 				var e = document.createElement('div');
 				e.innerHTML = input;
 				// handle case of empty input
 				return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
 			}
-			// var coord = getLocation();
-			// console.log(coord);
 			function getLocation() {
 				if (navigator.geolocation) {
 					var current = navigator.geolocation.getCurrentPosition(success, showError);
@@ -101,19 +104,18 @@
 					alert("Geolocation is not supported by this browser.");
 				}
 			}
-			// serverData = htmlDecode('{{ TreasureData }}');
-			// console.log(serverData);
 			function initMap() {
 				map = new google.maps.Map(mapID, {
 					center: {lat: 37.8716, lng: -122.2727},
 					zoom: 18    
 				});
-				// serverData =  JSON.parse(serverData);
-				google.maps.event.addListener(marker, "click", function(event) {
-					var latitude = event.latlng.lat();
-					var longitude = event.latlng.lng();
-				})
-				console.log( latitude + ', ' + longitude );
+				
+				map.addListener("mousemove", function (ev) {
+					var latitude = ev.latLng.lat();
+					var longitude = ev.latLng.lng();
+					
+
+				}); //end addListener
 
 			}
 			
