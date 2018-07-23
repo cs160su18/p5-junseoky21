@@ -79,35 +79,44 @@
 		#selected-user {
 			color: yellow;
 		}
+		.board-controller {
+			border: 2px solid yellow;
+
+		}
 	  </style>
 	<body>
 		<!-- Your layout here -->
 		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
 		<div id="leaderboard">
-			<h2>
-				Selected User
-			</h2>
-			<h3 id='selected-user'>None</h3>
+			<div class='board-controller'>
+				<h2>
+					Selected User
+				</h2>
+				<h3 id='selected-user'>None</h3>
+			</div>
+			<div class='board-controller'>
+				<h3>Remove Locations
+				</h3>
+				<button id='reset-locations' type='button'>reset-locations</button>
+			</div>
+			<div class='board-controller'>
+				<h3>
+					Create a user
+				</h3>
+				<!-- <form method='POST' action='/life/process/'> -->
+				<input type='hidden' name='type' value='CREATE_USER'>
+				<h3>Username:</h3> <input id='typed-username' type='text' name='name'>
+				<br>
+				<input id='user-submit' type='submit' value='Create User'>
+			</div>
+			<div class='board-controller'>
+				<h3>
+					Current Users (select)
+				</h3>
+				<table id='user-table'>
+				</table>
+			</div>
 			<!-- <br> -->
-			<h3>Remove Locations <button id='reset-locations' type='button'>reset-locations</button></h3>
-			<h3>
-				Create a user
-			</h3>
-			<!-- <form method='POST' action='/life/process/'> -->
-			<input type='hidden' name='type' value='CREATE_USER'>
-			<h3>Username:</h3> <input id='typed-username' type='text' name='name'>
-			<br>
-			<input id='user-submit' type='submit' value='Create User'>
-			<!-- </form> -->
-			<h3>
-				Current Users (select)
-			</h3>
-			
-			
-			
-			<table id='user-table'>
-				
-			</table>
 			
 			<!-- {{TreasureData}} -->
 		</div>
