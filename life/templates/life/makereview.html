@@ -13,10 +13,15 @@
       {% for restaurant in restaurants %}
       <input type="radio" name="restaurant" value={{restaurant.name}}> {{restaurant.name}}<br>
       {% endfor %}
+
+      <h3> Rating </h3> <br>
+      <input type = "number"> <br>
       <h3> Title </h3> <br>
       <input type = "text" name = "title"><br>
       <h3> Content </h3> <br>
       <input type="text" cols="40" rows="5" name = "content"><br>
+      <input type="hidden" name = "customer"> <!-- value ={user.name}} --> 
+      <input type ="hidden" name = "verified"> <!-- value = {{checkLocation(user.name,restaurant.name,.0005)}} -->
       <input type = "submit" value = "Submit Review"> <br>
     </form>
   </body>

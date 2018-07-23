@@ -9,7 +9,8 @@
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
 		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
-
+		<script src="{% static '/life/vendor/js/GlobalConstants.js' %}"></script>
+		<script src="{% static '/life/vendor/js/util.js' %}"></script>
 		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
 		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
 	</head>
@@ -24,12 +25,17 @@
 		  height: 100%;
 		  margin: 0;
 		  padding: 0;
+		  color: white;
+		}
+		h1,h2,h3 {
+			color: white;
 		}
 		#leaderboard {
 			width: 15%;
 			max-width: 400px;
 			height: 100%;
 			background-color: #1f1919da;
+			font-color: white;
 			position: fixed;
 			z-index: 2;
 		}
@@ -64,25 +70,60 @@
 			text-align:center;
 			width: 100vw;
 			z-index: 1;
+			color: black;
 			font-size: 150px;
+		}
+		#user-table {
+			background-color: black;
+		}
+		#selected-user {
+			color: yellow;
+		}
+		.board-controller {
+			border: 2px solid yellow;
+
 		}
 	  </style>
 	<body>
 		<!-- Your layout here -->
+<<<<<<< HEAD
 
 		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
 
+=======
+		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
+>>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 		<div id="leaderboard">
-				{% for group in groups%}
-				<font color="white"><p font-color=white>{{group.name}}</p></font>
-				{% endfor %}
-			<table id="leader-table">
-				<tr id="leader-table-heading">
-					<td>User Locations</td>
-				</tr>
-				<tr><td>Username</td><td><input type="text" name="username"></td></tr>
-
-			</table>
+			<div class='board-controller'>
+				<h2>
+					Selected User
+				</h2>
+				<h3 id='selected-user'>None</h3>
+			</div>
+			<div class='board-controller'>
+				<h3>Remove Locations
+				</h3>
+				<button id='reset-locations' type='button'>reset-locations</button>
+			</div>
+			<div class='board-controller'>
+				<h3>
+					Create a user
+				</h3>
+				<!-- <form method='POST' action='/life/process/'> -->
+				<input type='hidden' name='type' value='CREATE_USER'>
+				<h3>Username:</h3> <input id='typed-username' type='text' name='name'>
+				<br>
+				<input id='user-submit' type='submit' value='Create User'>
+			</div>
+			<div class='board-controller'>
+				<h3>
+					Current Users (select)
+				</h3>
+				<table id='user-table'>
+				</table>
+			</div>
+			<!-- <br> -->
+			
 			<!-- {{TreasureData}} -->
 		</div>
 		<div id="map"></div>
@@ -94,8 +135,8 @@
 			var keyEv = new KeyboardEvent("ctrlKey");
 			var activeUser;
 			var userLines = {};	// takes in username and returns the user's path
-
-
+			var userCoords = [];
+			var userPath;
 
 			function htmlDecode(input){
 				var e = document.createElement('div');
@@ -112,29 +153,155 @@
 					alert("Geolocation is not supported by this browser.");
 				}
 			}
+			
+			var mouseTime = false;
+			setInterval(function() {
+				mouseTime = true;
+			}, 300);
+			
+
 			function initMap() {
 				map = new google.maps.Map(mapID, {
 					center: {lat: 37.8716, lng: -122.2727},
 					zoom: 18
 				});
+				
 
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_LOCATIONS',
+						name: activeUser
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						for (var i = 0; i < parsed.length; i++) {
+							var lat = parsed[i]['fields']['latitude']
+							var lng = parsed[i]['fields']['longitude']
+							userCoords.push({lat:lat, lng:lng});
+						}
+						console.log(userCoords);
+						userPath = new google.maps.Polyline({
+							path: userCoords,
+							geodesic: true,
+							strokeColor: '#FF0000',
+							strokeOpacity: 1.0,
+							strokeWeight: 2
+						});
+						userPath.setMap(map);
+
+					},
+					failure: function(data) {
+
+					}
+				});
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_RESTAURANTS'
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						console.log(data)
+						for (var i = 0; i < parsed.length; i++) {
+							var name = parsed[i]['fields']['name']
+							var lat = parsed[i]['fields']['latitude']
+							var lng = parsed[i]['fields']['longitude']
+
+							var marker = new google.maps.Marker({
+								position: {
+									lat: lat,
+									lng: lng,
+								},
+								map: map,
+								title: name
+							});
+						}
+
+					},
+					failure: function(data) {
+
+					}
+				});
 				map.addListener("mousemove", function (ev) {
 					var latitude = ev.latLng.lat();
 					var longitude = ev.latLng.lng();
+<<<<<<< HEAD
 
 					if (!activeUser) {
 						noUserSelected();
 					}
 					// activeUser
+=======
+					if (!activeUser) {
+						noUserSelected();
+					}
+					if (!mouseTime) {
+						return;
+					}
+					console.log ("Location added");
+					mouseTime = false;
+					$.ajax({
+						url: '/life/process/',
+						type: 'POST',
+						data: {
+							type: 'ADD_LOCATION',
+							name: activeUser,
+							latitude: latitude,
+							longitude: longitude
+						},
+						success: function(data) {
+						},
+						failure: function(data) {
+
+						}
+					});
+					var latlng = {lat:latitude, lng:longitude};
+					userCoords.push(latlng);
+					if (userPath != null) {
+						// userPath.remove();
+						// userPath.setMap(map);
+						userPath.setPath(userCoords);
+					}
+					
+
+>>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 				}); //end addListener
+			}
+			function updateLocations(){
+				userCoords = [];
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_LOCATIONS',
+						name: activeUser
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						for (var i = 0; i < parsed.length; i++) {
+							var lat = parsed[i]['fields']['latitude']
+							var lng = parsed[i]['fields']['longitude']
+							userCoords.push({lat:lat, lng:lng});
+						}
+					},
+					failure: function(data) {
 
+<<<<<<< HEAD
 
+=======
+					}
+				});
+>>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 			}
 			// promptUser
 			function noUserSelected(){
 				if ($('.NoUserError').is(":hidden")){
 					$('.NoUserError').fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
 				}
+<<<<<<< HEAD
 			}
 <<<<<<< HEAD
 
@@ -143,6 +310,24 @@
 =======
 
 >>>>>>> 27a39c4cbc795e2f2e6805d9f3ae9fc78b2013c1
+=======
+			}	
+			$('#reset-locations').click(function(){
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'DEL_LOCATIONS',
+						name: activeUser
+					},
+					success: function(data) {
+						updateLocations();
+					},
+					failure: function(data) {
+					}
+				});
+			});
+>>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 			function showError(error) {
 				switch(error.code) {
 					case error.PERMISSION_DENIED:
@@ -178,6 +363,82 @@
 				return coord;
 			}
 
+
+			var users = []
+			var t=setInterval(function() {
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_USERS',
+						// name: $('#typed-username').val(),
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						// console.log(data);
+						var usertable = $('#user-table');
+						for (var i = 0; i < parsed.length; i++) {
+							var chunk = "";
+							var name = parsed[i]['fields']['name']
+							if (!users.includes(name)) {
+								chunk += "<tr class='userlist' id='{}'><td>Name: </td><td>".format(name);
+								chunk += name;
+								chunk += "</td></tr>";
+								users.push(name);
+								usertable.append(chunk);
+							}
+							
+						}
+						
+					},
+					failure: function(data) {
+
+					}
+				});
+			
+			},1000);
+			$(document).on('click', '.userlist', function(ev) {
+				// console.log(ev.currentTarget.id);
+				changeUsername(ev.currentTarget.id);
+			});
+			cookiename = getCookie('uname');
+			if (cookiename) {
+				changeUsername(getCookie('uname'));
+			}
+			function changeUsername(uname) {
+				setCookie('uname', uname,'30'); 
+				activeUser = uname;
+				$('#selected-user').html(activeUser);
+
+			}
+			// setCookie(name,value,days);
+			// getCookie(name)
+			$('input[name=userid]:radio:checked').change(function() {
+				alert("Allot Thai Gayo Bhai");
+
+				if (this.value == 'jun') {
+					alert("Allot Thai Gayo Bhai");
+				}
+				else if (this.value == 'transfer') {
+					alert("Transfer Thai Gayo");
+				}
+			});
+			$('#user-submit').click(function(ev){
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'CREATE_USER',
+						name: $('#typed-username').val(),
+					},
+					success: function(data) {
+						// location.reload();
+					},
+					failure: function(data) {
+
+					}
+				});
+			});
 		</script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9njv68P5DEaTEdsG1P4jLwcPlzyZNO94&callback=initMap"
 		async defer></script>

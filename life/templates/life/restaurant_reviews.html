@@ -1,0 +1,56 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Restaurants</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
+
+		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+        <style>
+            #reviews {
+                font-size: 40px;
+                border: 5px solid black;
+            }
+        </style>
+    </head>
+    
+	<body>
+        <!-- Your layout here -->
+        <table id = "reviews">
+            {% for review in reviews%}
+                <tr>
+                    <td>Name:</td>
+                    <td>{{review.title}}</td>
+                </tr>
+                <tr>
+                    <td>Rating:</td>
+                    <td>{{review.rating}}</td>
+                </tr>
+                <tr>
+                    <td>Rating:</td>
+                    <td>{{review.datetime}}</td>
+                </tr>
+                <tr>
+                    <td>Rating:</td>
+                    <td>{{review.verified}}</td>
+                </tr>
+                <tr>
+                    <td>Rating:</td>
+                    <td>{{review.customer}}</td>
+                </tr>
+                <tr>
+                    <td>Rating:</td>
+                    <td>{{review.restaurant}}</td>
+                </tr>
+            {% endfor %}
+        </table>
+	
+	</body>
+</html>

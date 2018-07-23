@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms import ModelForm
 
 class Group(models.Model):
 	established = models.DateTimeField(auto_now_add=True)
@@ -24,8 +25,11 @@ class Review(models.Model):
 	restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE)
 
 class LocationLogs(models.Model):
-	datetime = models.DateTimeField(auto_now_add=True)
+	customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
 	latitude = models.FloatField()
 	longitude = models.FloatField()
 
-
+class ReviewForm(ModelForm):
+    class Meta:
+        model = Review
+        fields = ['title', 'content', 'rating', 'verified', 'customer', 'restaurant']

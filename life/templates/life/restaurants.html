@@ -14,31 +14,32 @@
 		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
 		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
         <style>
-            #restaurants {
+            .rows {
                 font-size: 40px;
-                border: black;
+                border: 5px solid black;
             }
         </style>
     </head>
     
 	<body>
         <!-- Your layout here -->
-        <table id = "restaurants">
-            {% for restaurant in restaurants%}
-            
-                <tr>
-                    <td>Name:</td>
-                    <td>{{restaurant.0.name}}</td>
-                    
-                </tr>
-                <tr>
-                    <td>Rating:</td>
-                    <td>{{restaurant.1}}</td>
-
-                </tr>
-
+        <table>
+                {% for restaurant in restaurants%}
+            <tr class="rows">
+                <td>
+                    <table>
+                        <tr>
+                            <td>Name:</td>
+                            <td><a href="/life/restaurant_reviews/?name={{restaurant.0.name}}">{{restaurant.0.name}}</a></td>
+                        </tr>
+                        <tr>
+                            <td>Rating:</td>
+                            <td>{{restaurant.1}}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
             {% endfor %}
         </table>
-	
 	</body>
 </html>

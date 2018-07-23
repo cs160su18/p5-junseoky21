@@ -1,0 +1,81 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Project 5 Database</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
+
+		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+	</head>
+	<body>
+		<!-- Your layout here -->
+        <h3>
+            Create a user
+        </h3>
+        <!-- <form method='POST' action='/life/process/'> -->
+        <input type='hidden' name='type' value='CREATE_USER'>
+        Username: <input id='typed-username' type='text' name='name'>
+        <br>
+        <input id='user-submit' type='submit' value='Create User'>
+        <!-- </form> -->
+        <h1>
+            Current Users
+        </h1>
+        <table id='user-table'>
+
+        </table>
+        <script>
+            var users = []
+            var t=setInterval(function() {
+                $.ajax({
+                    url: '/life/process/',
+                    type: 'POST',
+                    data: {
+                        type: 'GET_USERS',
+                        // name: $('#typed-username').val(),
+                    },
+                    success: function(data) {
+                        var parsed = JSON.parse(data)
+                        // console.log(data);
+                        var chunk = "";
+                        for (var i = 0; i < parsed.length; i++) {
+                            chunk += "<tr><td>Name: </td><td>";
+                            chunk += parsed[i]['fields']['name'];
+                            chunk += "</td></tr>";
+                        }
+                        $('#user-table').html(chunk);
+
+                    },
+                    failure: function(data) {
+
+                    }
+                });
+            
+            },1000);
+
+            $('#user-submit').click(function(ev){
+                $.ajax({
+                    url: '/life/process/',
+                    type: 'POST',
+                    data: {
+                        type: 'CREATE_USER',
+                        name: $('#typed-username').val(),
+                    },
+                    success: function(data) {
+                        // location.reload();
+                    },
+                    failure: function(data) {
+
+                    }
+                });
+            });
+
+        </script>
+	</body>
+</html>
