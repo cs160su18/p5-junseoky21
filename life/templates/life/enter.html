@@ -9,7 +9,8 @@
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
 		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
-
+		<script src="{% static '/life/vendor/js/GlobalConstants.js' %}"></script>
+		<script src="{% static '/life/vendor/js/util.js' %}"></script>
 		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
 		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
 	</head>
@@ -24,12 +25,17 @@
 		  height: 100%;
 		  margin: 0;
 		  padding: 0;
+		  color: white;
+		}
+		h1,h2,h3 {
+			color: white;
 		}
 		#leaderboard {
 			width: 15%;
 			max-width: 400px;
 			height: 100%;
 			background-color: #1f1919da;
+			font-color: white;
 			position: fixed;
 			z-index: 2;
 		}
@@ -64,23 +70,40 @@
 			text-align:center;
 			width: 100vw;
 			z-index: 1;
+			color: black;
 			font-size: 150px;
+		}
+		#user-table {
+			background-color: black;
 		}
 	  </style>
 	<body>
 		<!-- Your layout here -->
 		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
 		<div id="leaderboard">
-				{% for group in groups%}
-				<font color="white"><p font-color=white>{{group.name}}</p></font>
-				{% endfor %}
-			<table id="leader-table">
-				<tr id="leader-table-heading">
-					<td>User Locations</td>
-				</tr>
-				<tr><td>Username</td><td><input type="text" name="username"></td></tr>
+			Selected User
+			<p id='selected-user'>None</p>
+			<br>
 
+			<h1>
+				Create a user
+			</h1>
+			<!-- <form method='POST' action='/life/process/'> -->
+			<input type='hidden' name='type' value='CREATE_USER'>
+			<h2>Username:</h2> <input id='typed-username' type='text' name='name'>
+			<br>
+			<input id='user-submit' type='submit' value='Create User'>
+			<!-- </form> -->
+			<h1>
+				Current Users
+			</h1>
+			
+			
+			
+			<table id='user-table'>
+				
 			</table>
+			
 			<!-- {{TreasureData}} -->
 		</div>
 		<div id="map"></div>
@@ -92,8 +115,6 @@
 			var keyEv = new KeyboardEvent("ctrlKey");
 			var activeUser;
 			var userLines = {};	// takes in username and returns the user's path
-
-
 
 			function htmlDecode(input){
 				var e = document.createElement('div');
@@ -119,15 +140,24 @@
 				map.addListener("mousemove", function (ev) {
 					var latitude = ev.latLng.lat();
 					var longitude = ev.latLng.lng();
-<<<<<<< HEAD
 					if (!activeUser) {
 						noUserSelected();
 					}
-					// activeUser
-=======
+					$.ajax({
+						url: '/life/process/',
+						type: 'POST',
+						data: {
+							type: 'NEW_LOCATION',
+							latitude: latitude,
+							longitude: longitude,
+							name: activeUser,
+						},
+						success: function(data) {
+						},
+						failure: function(data) {
 
-
->>>>>>> c9e9fd9be88c7318662aceba61b3c2760579021d
+						}
+					});
 				}); //end addListener
 
 				
@@ -137,14 +167,8 @@
 				if ($('.NoUserError').is(":hidden")){
 					$('.NoUserError').fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
 				}
-			}
-<<<<<<< HEAD
-	
-=======
+			}	
 
-
-
->>>>>>> c9e9fd9be88c7318662aceba61b3c2760579021d
 			function showError(error) {
 				switch(error.code) {
 					case error.PERMISSION_DENIED:
@@ -180,6 +204,82 @@
 				return coord;
 			}
 
+
+			var users = []
+			var t=setInterval(function() {
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_USERS',
+						// name: $('#typed-username').val(),
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						// console.log(data);
+						var usertable = $('#user-table');
+						for (var i = 0; i < parsed.length; i++) {
+							var chunk = "";
+							var name = parsed[i]['fields']['name']
+							if (!users.includes(name)) {
+								chunk += "<tr class='userlist' id='{}'><td>Name: </td><td>".format(name);
+								chunk += name;
+								chunk += "</td></tr>";
+								users.push(name);
+								usertable.append(chunk);
+							}
+							
+						}
+						
+					},
+					failure: function(data) {
+
+					}
+				});
+			
+			},1000);
+			$(document).on('click', '.userlist', function(ev) {
+				// console.log(ev.currentTarget.id);
+				changeUsername(ev.currentTarget.id);
+			});
+			cookiename = getCookie('uname');
+			if (cookiename) {
+				changeUsername(getCookie('uname'));
+			}
+			function changeUsername(uname) {
+				setCookie('uname', uname,'30'); 
+				activeUser = uname;
+				$('#selected-user').html(activeUser);
+
+			}
+			// setCookie(name,value,days);
+			// getCookie(name)
+			$('input[name=userid]:radio:checked').change(function() {
+				alert("Allot Thai Gayo Bhai");
+
+				if (this.value == 'jun') {
+					alert("Allot Thai Gayo Bhai");
+				}
+				else if (this.value == 'transfer') {
+					alert("Transfer Thai Gayo");
+				}
+			});
+			$('#user-submit').click(function(ev){
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'CREATE_USER',
+						name: $('#typed-username').val(),
+					},
+					success: function(data) {
+						// location.reload();
+					},
+					failure: function(data) {
+
+					}
+				});
+			});
 		</script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9njv68P5DEaTEdsG1P4jLwcPlzyZNO94&callback=initMap"
 		async defer></script>

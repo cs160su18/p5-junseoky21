@@ -3,6 +3,10 @@ from django.core import serializers
 from life.models import *
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from django.core import serializers
+jserial = serializers.get_serializer("json")()
 
 
 def index(request):
@@ -13,16 +17,38 @@ def view(request):
     all_groups = Group.objects.all()
     return render(request, 'life/view.html', {"groups": all_groups})
 
+@csrf_exempt
+def users(request):
+    all_users = Customer.objects.all()
+    print (all_users)
+    return render(request, 'life/users.html', {"users" : all_users})
+
+
+
+@csrf_exempt
 def processMyData(request):
     if request.method == 'POST':
-        print(request.body)
+        whatReq = request.POST.get('type', None)
+        if whatReq == 'CREATE_USER':
+            username = request.POST.get('name')
+            print (username)
+            newCustomer = Customer(name=username)
+            newCustomer.save()
+        elif whatReq == 'GET_USERS':
+            all_users = Customer.objects.all()
+            # jserial.serialize(all_users)
+            return HttpResponse(jserial.serialize(all_users))
+        elif whatReq == 'CREATE_REVIEW':
+            None
+        elif whatReq == 'ADD_LOCATION':
+            None
         return HttpResponse('')
-    else:
-        all_groups = Group.objects.all()
-        response = serialize('json', all_groups)
-        return HttpResponse(response, content_type="application/json")
+    # else:
+    #     all_groups = Group.objects.all()
+    #     response = serialize('json', all_groups)
+    #     return HttpResponse(response, content_type="application/json")
 
-    render(request, 'life/processMyData.html', {})
+    # render(request, 'life/processMyData.html', {})
 
 def restaurants(request):
     all_restaurants = Restaurant.objects.all()
@@ -60,6 +86,10 @@ def enter(request):
     all_groups = Group.objects.all()
     return render(request, 'life/enter.html', {"groups": all_groups})
 
+
+
+
+@csrf_exempt
 def make_review(request):
     if request.method == 'POST':
         form = ReviewForm(request.POST)
