@@ -25,7 +25,6 @@ class Review(models.Model):
 
 class LocationLogs(models.Model):
 	customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
-	datetime = models.DateTimeField(auto_now_add=True)
 	latitude = models.FloatField()
 	longitude = models.FloatField()
 

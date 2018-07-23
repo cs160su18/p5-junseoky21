@@ -76,27 +76,32 @@
 		#user-table {
 			background-color: black;
 		}
+		#selected-user {
+			color: yellow;
+		}
 	  </style>
 	<body>
 		<!-- Your layout here -->
 		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
 		<div id="leaderboard">
-			Selected User
-			<p id='selected-user'>None</p>
-			<br>
-
-			<h1>
+			<h2>
+				Selected User
+			</h2>
+			<h3 id='selected-user'>None</h3>
+			<!-- <br> -->
+			<h3>Remove Locations <button id='reset-locations' type='button'>reset-locations</button></h3>
+			<h3>
 				Create a user
-			</h1>
+			</h3>
 			<!-- <form method='POST' action='/life/process/'> -->
 			<input type='hidden' name='type' value='CREATE_USER'>
-			<h2>Username:</h2> <input id='typed-username' type='text' name='name'>
+			<h3>Username:</h3> <input id='typed-username' type='text' name='name'>
 			<br>
 			<input id='user-submit' type='submit' value='Create User'>
 			<!-- </form> -->
-			<h1>
-				Current Users
-			</h1>
+			<h3>
+				Current Users (select)
+			</h3>
 			
 			
 			
@@ -115,6 +120,8 @@
 			var keyEv = new KeyboardEvent("ctrlKey");
 			var activeUser;
 			var userLines = {};	// takes in username and returns the user's path
+			var userCoords = [];
+			var userPath;
 
 			function htmlDecode(input){
 				var e = document.createElement('div');
@@ -131,26 +138,97 @@
 					alert("Geolocation is not supported by this browser.");
 				}
 			}
+			
+			var mouseTime = false;
+			setInterval(function() {
+				mouseTime = true;
+			}, 300);
+			
+
 			function initMap() {
 				map = new google.maps.Map(mapID, {
 					center: {lat: 37.8716, lng: -122.2727},
 					zoom: 18
 				});
+				
 
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_LOCATIONS',
+						name: activeUser
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						for (var i = 0; i < parsed.length; i++) {
+							var lat = parsed[i]['fields']['latitude']
+							var lng = parsed[i]['fields']['longitude']
+							userCoords.push({lat:lat, lng:lng});
+						}
+						console.log(userCoords);
+						userPath = new google.maps.Polyline({
+							path: userCoords,
+							geodesic: true,
+							strokeColor: '#FF0000',
+							strokeOpacity: 1.0,
+							strokeWeight: 2
+						});
+						userPath.setMap(map);
+
+					},
+					failure: function(data) {
+
+					}
+				});
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_RESTAURANTS'
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						console.log(data)
+						for (var i = 0; i < parsed.length; i++) {
+							var name = parsed[i]['fields']['name']
+							var lat = parsed[i]['fields']['latitude']
+							var lng = parsed[i]['fields']['longitude']
+
+							var marker = new google.maps.Marker({
+								position: {
+									lat: lat,
+									lng: lng,
+								},
+								map: map,
+								title: name
+							});
+						}
+
+					},
+					failure: function(data) {
+
+					}
+				});
 				map.addListener("mousemove", function (ev) {
 					var latitude = ev.latLng.lat();
 					var longitude = ev.latLng.lng();
 					if (!activeUser) {
 						noUserSelected();
 					}
+					if (!mouseTime) {
+						return;
+					}
+					console.log ("Location added");
+					mouseTime = false;
 					$.ajax({
 						url: '/life/process/',
 						type: 'POST',
 						data: {
-							type: 'NEW_LOCATION',
-							latitude: latitude,
-							longitude: longitude,
+							type: 'ADD_LOCATION',
 							name: activeUser,
+							latitude: latitude,
+							longitude: longitude
 						},
 						success: function(data) {
 						},
@@ -158,9 +236,38 @@
 
 						}
 					});
-				}); //end addListener
+					var latlng = {lat:latitude, lng:longitude};
+					userCoords.push(latlng);
+					if (userPath != null) {
+						// userPath.remove();
+						// userPath.setMap(map);
+						userPath.setPath(userCoords);
+					}
+					
 
-				
+				}); //end addListener
+			}
+			function updateLocations(){
+				userCoords = [];
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_LOCATIONS',
+						name: activeUser
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						for (var i = 0; i < parsed.length; i++) {
+							var lat = parsed[i]['fields']['latitude']
+							var lng = parsed[i]['fields']['longitude']
+							userCoords.push({lat:lat, lng:lng});
+						}
+					},
+					failure: function(data) {
+
+					}
+				});
 			}
 			// promptUser			
 			function noUserSelected(){
@@ -168,7 +275,21 @@
 					$('.NoUserError').fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
 				}
 			}	
-
+			$('#reset-locations').click(function(){
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'DEL_LOCATIONS',
+						name: activeUser
+					},
+					success: function(data) {
+						updateLocations();
+					},
+					failure: function(data) {
+					}
+				});
+			});
 			function showError(error) {
 				switch(error.code) {
 					case error.PERMISSION_DENIED:

@@ -41,7 +41,27 @@ def processMyData(request):
         elif whatReq == 'CREATE_REVIEW':
             None
         elif whatReq == 'ADD_LOCATION':
-            None
+            lat = request.POST.get('latitude')
+            lng = request.POST.get('longitude')
+            name = request.POST.get('name')
+            customer = Customer.objects.filter(name=name)[0]
+            LocationLog = LocationLogs()
+            LocationLog.customer = customer
+            LocationLog.latitude = lat
+            LocationLog.longitude = lng
+            LocationLog.save()
+        elif whatReq == 'GET_LOCATIONS':
+            name = request.POST.get('name')
+            customer = Customer.objects.filter(name=name)[0]
+            LocationLog = LocationLogs.objects.filter(customer=customer)
+            return HttpResponse(jserial.serialize(LocationLog))
+        elif whatReq == 'GET_RESTAURANTS':
+            all_restaurant = Restaurant.objects.all()
+            return HttpResponse(jserial.serialize(all_restaurant))
+        elif whatReq == 'DEL_LOCATIONS':
+            name = request.POST.get('name')
+            customer = Customer.objects.filter(name=name)[0]
+            LocationLogs.objects.filter(customer=customer).delete()
         return HttpResponse('')
     # else:
     #     all_groups = Group.objects.all()
