@@ -14,6 +14,10 @@
 		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
 		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
         <style>
+            body {
+                padding:0;
+                background-color: lightgrey;
+            }
             .rows {
                 font-size: 30px;
                 border: 5px solid black;
@@ -21,20 +25,38 @@
             #restaurant-table {
                 width: 100vw;
             }
+            .header {
+                font-size: 100px;
+                background-color: grey;
+            }
+            .boot-stretch {
+                width: 100%;
+            }
+            .no-hyper {
+                color: black;
+                text-decoration: none;
+            }
         </style>
     </head>
     
 	<body>
         <!-- Your layout here -->
+        <div id='container' class="boot-stretch">
+            <div class="row header">
+                <div class="col-2"><a href='/life'>🔙</a></div>
+                <div class='col-10'>Restaurants</div>
+            </div>
+        </div>
         <table id='restaurant-table'>
                 {% for restaurant in restaurants%}
             <tr class="rows">
                 <td>
+                    <a class='no-hyper' href="/life/restaurant_reviews/?name={{restaurant.0.name}}">
                     <table>
                         <tr>
                             <td>Name:</td>
                             <td>
-                                <a href="/life/restaurant_reviews/?name={{restaurant.0.name}}">{{restaurant.0.name}}</a>
+                                {{restaurant.0.name}}
                             </td>
                         </tr>
                         <tr>
@@ -42,6 +64,7 @@
                             <td>{{restaurant.1}}</td>
                         </tr>
                     </table>
+                    </a>
                 </td>
             </tr>
             {% endfor %}

@@ -19,19 +19,19 @@
       {% endfor %}
 
       <h3> Rating </h3> <br>
-      <input type = "number"> <br>
+      <input type = "number" name='num'> <br>
       <h3> Title </h3> <br>
       <input type = "text" name = "title"><br>
       <h3> Content </h3> <br>
       <input type="text" cols="40" rows="5" name = "content"><br>
-      <input id = 'customer' type="hidden" name = "customer">
+      <input id = 'customer-name' type="hidden" name = "customer">
       <input type='hidden' name='type' value = "ADD_REVIEW">
 
       <input type = "submit" value = "Submit Review"> <br>
     </form>
     <script type = "text/javascript">
-      $('#customer-name').value = getCookie('uname')
-      alert(getCookie('uname'))
+      $('#customer-name').val(getCookie('uname'));
+      // alert(getCookie('uname'));
     </script>
   </body>
 </html>

@@ -83,11 +83,17 @@
 			border: 2px solid yellow;
 
 		}
+		#back-icon{
+			font-size:50px;
+		}
 	  </style>
 	<body>
 		<!-- Your layout here -->
 		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
 		<div id="leaderboard">
+			<a id='back-icon' href='/life/'>
+				🔙
+			</a>
 			<div class='board-controller'>
 				<h2>
 					Selected User
@@ -95,9 +101,11 @@
 				<h3 id='selected-user'>None</h3>
 			</div>
 			<div class='board-controller'>
-				<h3>Remove Locations
+				<h3>Remover
 				</h3>
 				<button id='reset-locations' type='button'>reset-locations</button>
+				<button id='reset-users' type='button'>reset-users</button>
+				<button id='reset-reviews' type='button'>reset-reviews</button>
 			</div>
 			<div class='board-controller'>
 				<h3>
@@ -131,6 +139,7 @@
 			var userLines = {};	// takes in username and returns the user's path
 			var userCoords = [];
 			var userPath;
+			var users = []
 
 			function htmlDecode(input){
 				var e = document.createElement('div');
@@ -277,6 +286,28 @@
 					}
 				});
 			}
+			function resetLocations(){
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'GET_LOCATIONS',
+						name: activeUser
+					},
+					success: function(data) {
+						var parsed = JSON.parse(data)
+						userCoords = []
+						for (var i = 0; i < parsed.length; i++) {
+							var lat = parsed[i]['fields']['latitude']
+							var lng = parsed[i]['fields']['longitude']
+							userCoords.push({lat:lat, lng:lng});
+						}
+					},
+					failure: function(data) {
+
+					}
+				});
+			}
 			// promptUser
 			function noUserSelected(){
 				if ($('.NoUserError').is(":hidden")){
@@ -293,6 +324,35 @@
 					},
 					success: function(data) {
 						updateLocations();
+					},
+					failure: function(data) {
+					}
+				});
+			});
+			$('#reset-users').click(function(){
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'DEL_USERS'
+					},
+					success: function(data) {
+						var usertable = $('#user-table');
+						users = [];
+						usertable.html('');
+					},
+					failure: function(data) {
+					}
+				});
+			});
+			$('#reset-reviews').click(function(){
+				$.ajax({
+					url: '/life/process/',
+					type: 'POST',
+					data: {
+						type: 'DEL_REVIEWS'
+					},
+					success: function(data) {
 					},
 					failure: function(data) {
 					}
@@ -334,7 +394,6 @@
 			}
 
 
-			var users = []
 			var t=setInterval(function() {
 				$.ajax({
 					url: '/life/process/',
@@ -357,9 +416,7 @@
 								users.push(name);
 								usertable.append(chunk);
 							}
-
 						}
-
 					},
 					failure: function(data) {
 
@@ -370,6 +427,7 @@
 			$(document).on('click', '.userlist', function(ev) {
 				// console.log(ev.currentTarget.id);
 				changeUsername(ev.currentTarget.id);
+				resetLocations();
 			});
 			cookiename = getCookie('uname');
 			if (cookiename) {
@@ -379,7 +437,6 @@
 				setCookie('uname', uname,'30');
 				activeUser = uname;
 				$('#selected-user').html(activeUser);
-
 			}
 			// setCookie(name,value,days);
 			// getCookie(name)

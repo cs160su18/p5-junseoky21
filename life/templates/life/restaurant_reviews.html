@@ -10,13 +10,67 @@
 		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
 		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
 		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
-
+        <script src="{% static '/life/vendor/js/GlobalConstants.js' %}"></script>
+		<script src="{% static '/life/vendor/js/util.js' %}"></script>
 		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
 		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
         <style>
-            #reviews {
-                font-size: 40px;
+            body {
+                padding:0;
+            }
+            .rows {
+                font-size: 30px;
                 border: 5px solid black;
+                width: 100%;
+            }
+            #review-table {
+                width: 100vw;
+            }
+            .justified-right {
+                text-align: right;
+            }
+            .justified-center {
+                text-align: center;
+            }
+            #sub-table {
+                width: 100%;
+                table-layout : fixed;
+            }
+            .header {
+                font-size: 100px;
+                background-color: grey;
+            }
+            .radio {
+                width: 40px;
+                height: 40px;
+            }
+            .form-title {
+                font-size: 30px;
+                font-weight: bold;
+            }
+            .boot-stretch {
+                width: 100%;
+            }
+            .form-content {
+                width: 100%;
+            }
+            textarea { font-size: 30px; }
+            #review-col {
+                padding:0;
+            }
+            #review-form {
+                display:none;
+            }
+            #your-name{
+                color: red;
+            }
+            #review-submit-button{
+                width: 200px;
+                height: 110px;
+                font-size: 50px;
+            }
+            .review-content {
+                width: 100%;
             }
         </style>
     </head>
@@ -24,35 +78,113 @@
 	<body>
         <!-- Your layout here -->
         <!-- saijgoiejgioewjrm -->
+
+        <div id='container' class="boot-stretch">
+            <div class="row header">
+                <div class="col-2"><a href='/life/restaurants'>🔙</a></div>
+                <div class='col-10'>{{restaurant.name}}</div>
+            </div>
+            
         
-        <table id = "reviews">
+        
+        <table id='review-table'>
+            <tr id='make-review'>
+                <td class='justified-center rows'>
+                    <h1>Make Review</h1>
+                </td>
+            </tr>
+            <tr >
+                <td id='review-col'>
+                    <form id='review-form' action="/life/process/" method="post" type = "ADD_REVIEW">
+                        <input type="hidden" name="restaurant" value='{{restaurant.name}}'>
+                        <div class="row form-title">
+                            <div class='col-4'>Your Name:</div>
+                            <div id='your-name' class='col-8'></div>
+                        </div>
+                        <div class="row form-title">
+                            <div class='col-6'>
+                                Title
+                                <input type = "text" name = "title">
+                            </div>
+                            <div class='col-6 justified-right'>
+                                Rating &nbsp&nbsp
+                                <input class='radio' type="radio" name='num' value=1>&nbsp
+                                <input class='radio'  type="radio" name='num' value=2>&nbsp
+                                <input class='radio'  type="radio" name='num' value=3>&nbsp
+                                <input class='radio'  type="radio" name='num' value=4>&nbsp
+                                <input class='radio'  type="radio" name='num' value=5>&nbsp
+                            </div>
+                        </div>
+                        <div class="row form-title">
+                            <div class="col-12"> Content </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <textarea class='form-content' type="text" cols="40" rows="5" name="content"></textarea>
+                            </div>
+                        </div>
+                        <input id='customer-name' type="hidden" name = "customer">
+                        <input type='hidden' name='type' value = "ADD_REVIEW">
+                        <div class="row">
+                            <div class="col-12 justified-right">
+                                <button id='review-submit-button' value="Submit Review">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </td>
+            </tr>
+            <tr>
+                <td class='justified-center rows'>
+                    <h1>Customer Reviews</h1>
+                </td>
+            </tr>
             {% for review in reviews%}
-                <tr>
-                    <td>Name:</td>
-                    <td>{{review.title}}</td>
+            <tr class='rows'>
+                <td>
+                    <table id='sub-table'>
+                            <tr>
+                                <td>Title: {{review.title}}</td>
+                            </tr>
+                            <tr>
+                                <td>Name: {{review.customer.name}}</td>
+                                <td class='justified-right'>date: {{review.datetime}}</td>
+                            </tr>
+                            <tr>
+                                
+                                {% if review.verified == True%}
+                                <td class='verified-col'>Verified: ✅</td>
+                                {% else %}
+                                <td class='verified-col'>Verified: ❌</td>
+                                {% endif %}
+                                <td class='justified-right'>Rating: {{review.rating}}</td>
+
+
+                            </tr>
+                            <tr>
+                                <td><b>Content</b></td>
+                            </tr>
+                        </table>
+                        <table id='sub-table'>
+                            <tr>
+                                <td class='review-content'>{{review.content|linebreaks}}</td>
+                            </tr>
+                        </table>
+                    </td>
                 </tr>
-                <tr>
-                    <td>Rating:</td>
-                    <td>{{review.rating}}</td>
-                </tr>
-                <tr>
-                    <td>Rating:</td>
-                    <td>{{review.datetime}}</td>
-                </tr>
-                <tr>
-                    <td>Rating:</td>
-                    <td>{{review.verified}}</td>
-                </tr>
-                <tr>
-                    <td>Rating:</td>
-                    <td>{{review.customer}}</td>
-                </tr>
-                <tr>
-                    <td>Rating:</td>
-                    <td>{{review.restaurant}}</td>
-                </tr>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </table>
-	
+        <script>
+            $('#customer-name').val(getCookie('uname'));
+            $('#make-review').click(
+                function(){
+                    // alert("sanhogheg");
+                    $('#review-form').slideToggle();
+                }
+            );
+            $('#your-name').html(getCookie('uname'));
+        
+        </script>
 	</body>
 </html>

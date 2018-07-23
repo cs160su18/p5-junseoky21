@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.core import serializers
+from django.test.client import RequestFactory
 import math
 jserial = serializers.get_serializer("json")()
 
@@ -56,18 +57,31 @@ def processMyData(request):
         elif whatReq == 'GET_RESTAURANTS':
             all_restaurant = Restaurant.objects.all()
             return HttpResponse(jserial.serialize(all_restaurant))
+        elif whatReq == 'DEL_REVIEWS':
+            Review.objects.all().delete()
+        elif whatReq == 'DEL_USERS':
+            Customer.objects.all().delete()
         elif whatReq == 'DEL_LOCATIONS':
             name = request.POST.get('name')
             customer = Customer.objects.filter(name=name)[0]
             LocationLogs.objects.filter(customer=customer).delete()
         elif whatReq == 'ADD_REVIEW':
-            print("IN ADD_REVIEW")
-            form = ReviewForm(request.POST)
-            form.verified = checkLocation(form.customer, form.restaurant, .0005)
-            if form.is_valid():
-                form.save()
-            else:
-                messages.error(request, "Error")
+            # print("IN ADD_REVIEW")
+            print("dskgpokjhpo", request.POST.get('customer'))
+            restaurant = Restaurant.objects.filter(name=request.POST.get('restaurant'))[0]
+            num = request.POST.get('num')
+            title = request.POST.get('title')
+            content = request.POST.get('content')
+            customer = Customer.objects.filter(name=request.POST.get('customer'))[0]
+            verified = checkLocation(customer.name, restaurant.name, .0005)
+            newReview = Review(title=title, restaurant=restaurant,
+            customer=customer, rating=num, verified=verified, content=content)
+            newReview.save()
+            # all_restaurants = Restaurant.objects.all()
+            new_request = RequestFactory().get('/')
+            new_request.GET = request.GET.copy()
+            new_request.GET['name'] = restaurant.name
+            return restaurant_reviews(new_request)
         return HttpResponse('')
     # else:
     #     all_groups = Group.objects.all()
@@ -101,13 +115,11 @@ def restaurant_reviews(request):
         # print(type(name))
         restaurant = Restaurant.objects.filter(name=name)[0]
         reviews = Review.objects.filter(restaurant=restaurant)
-        # print(reviews)
-        # print("Verified?????" + str(checkLocation('jun', name, 0.005)))
     else:
         message = 'No Restaurants Selected!!'
         print (message)
         reviews = ''
-    return render(request, 'life/restaurant_reviews.html', {"reviews": reviews})
+    return render(request, 'life/restaurant_reviews.html', {"reviews": reviews, "restaurant":restaurant})
 
 
 def enter(request):

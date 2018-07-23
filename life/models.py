@@ -12,8 +12,6 @@ class Restaurant(models.Model):
 	name = models.CharField(max_length=64)
 	latitude = models.FloatField()
 	longitude = models.FloatField()
-	# rating = models.FloatField()
-	# joined = models.DateTimeField(auto_now_add=True)
 
 class Review(models.Model):
 	title = models.CharField(max_length=64)
