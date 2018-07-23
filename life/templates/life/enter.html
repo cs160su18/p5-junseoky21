@@ -86,13 +86,7 @@
 	  </style>
 	<body>
 		<!-- Your layout here -->
-<<<<<<< HEAD
-
 		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
-
-=======
-		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
->>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 		<div id="leaderboard">
 			<div class='board-controller'>
 				<h2>
@@ -123,7 +117,7 @@
 				</table>
 			</div>
 			<!-- <br> -->
-			
+
 			<!-- {{TreasureData}} -->
 		</div>
 		<div id="map"></div>
@@ -153,19 +147,19 @@
 					alert("Geolocation is not supported by this browser.");
 				}
 			}
-			
+
 			var mouseTime = false;
 			setInterval(function() {
 				mouseTime = true;
 			}, 300);
-			
+
 
 			function initMap() {
 				map = new google.maps.Map(mapID, {
 					center: {lat: 37.8716, lng: -122.2727},
 					zoom: 18
 				});
-				
+
 
 				$.ajax({
 					url: '/life/process/',
@@ -228,13 +222,7 @@
 				map.addListener("mousemove", function (ev) {
 					var latitude = ev.latLng.lat();
 					var longitude = ev.latLng.lng();
-<<<<<<< HEAD
 
-					if (!activeUser) {
-						noUserSelected();
-					}
-					// activeUser
-=======
 					if (!activeUser) {
 						noUserSelected();
 					}
@@ -265,9 +253,8 @@
 						// userPath.setMap(map);
 						userPath.setPath(userCoords);
 					}
-					
 
->>>>>>> 67619386e843d90e26b675070736f8dde6a699db
+
 				}); //end addListener
 			}
 			function updateLocations(){
@@ -289,29 +276,15 @@
 					},
 					failure: function(data) {
 
-<<<<<<< HEAD
-
-=======
 					}
 				});
->>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 			}
 			// promptUser
 			function noUserSelected(){
 				if ($('.NoUserError').is(":hidden")){
 					$('.NoUserError').fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
 				}
-<<<<<<< HEAD
 			}
-<<<<<<< HEAD
-
-
-
-=======
-
->>>>>>> 27a39c4cbc795e2f2e6805d9f3ae9fc78b2013c1
-=======
-			}	
 			$('#reset-locations').click(function(){
 				$.ajax({
 					url: '/life/process/',
@@ -327,7 +300,6 @@
 					}
 				});
 			});
->>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 			function showError(error) {
 				switch(error.code) {
 					case error.PERMISSION_DENIED:
@@ -387,15 +359,15 @@
 								users.push(name);
 								usertable.append(chunk);
 							}
-							
+
 						}
-						
+
 					},
 					failure: function(data) {
 
 					}
 				});
-			
+
 			},1000);
 			$(document).on('click', '.userlist', function(ev) {
 				// console.log(ev.currentTarget.id);
@@ -406,7 +378,7 @@
 				changeUsername(getCookie('uname'));
 			}
 			function changeUsername(uname) {
-				setCookie('uname', uname,'30'); 
+				setCookie('uname', uname,'30');
 				activeUser = uname;
 				$('#selected-user').html(activeUser);
 
