@@ -13,7 +13,6 @@ def view(request):
     all_groups = Group.objects.all()
     return render(request, 'life/view.html', {"groups": all_groups})
 
-
 def processMyData(request):
     if request.method == 'POST':
         print(request.body)
@@ -54,3 +53,17 @@ def make_review(request):
             messages.error(request, "Error")
     all_restaurants = Restaurant.objects.all()
     return render(request, 'life/makereview.html', {"restaurants": all_restaurants})
+
+def checkLocation(customerName, restaurantName, tolerance):
+    customer = Customer.objects.filter(name=customerName)
+    restaurant = Restaurant.objects.filter(name=restaurantName)
+    lat = restaurant[0].latitude
+    lng = restaurant[0].longitude
+    LL = LocationLogs.objects.filter(customer=customer[0])
+    for l in LL:
+        if pytagorean(lat - l.latitude, lng - l.longitude) < tolerance:
+            return True
+    return False
+
+def pytagorean(a, b):
+    return math.sqrt(a**2 + b**2)
