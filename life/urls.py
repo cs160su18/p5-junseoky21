@@ -8,4 +8,5 @@ urlpatterns = [
     path('restaurant_reviews/',views.restaurant_reviews, name='restaurant_reviews'),
     path('view/',views.view, name='view'),
     path('process/',views.processMyData, name='process'),
+    path('make_review/', views.make_review, name = 'make_review'),
 ]

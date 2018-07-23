@@ -4,7 +4,6 @@ class Group(models.Model):
 	established = models.DateTimeField(auto_now_add=True)
 	name = models.CharField(max_length=50)
 
-
 class Customer(models.Model):
 	name = models.CharField(max_length=64)
 
