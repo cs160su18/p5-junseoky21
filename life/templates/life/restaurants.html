@@ -1,0 +1,44 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<title>Restaurants</title>
+
+		<link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="{% static '/life/vendor/bootstrap/css/bootstrap.css' %}" />
+		<link rel="stylesheet" type="text/css" href="{% static '/life/css/main.css' %}" />
+
+		<script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+        <style>
+            #restaurants {
+                font-size: 40px;
+                border: black;
+            }
+        </style>
+    </head>
+    
+	<body>
+        <!-- Your layout here -->
+        <table id = "restaurants">
+            {% for restaurant in restaurants%}
+            
+                <tr>
+                    <td>Name:</td>
+                    <td>{{restaurant.0.name}}</td>
+                    
+                </tr>
+                <tr>
+                    <td>Rating:</td>
+                    <td>{{restaurant.1}}</td>
+
+                </tr>
+
+            {% endfor %}
+        </table>
+	
+	</body>
+</html>

@@ -27,3 +27,5 @@ class LocationLogs(models.Model):
 	datetime = models.DateTimeField(auto_now_add=True)
 	latitude = models.FloatField()
 	longitude = models.FloatField()
+
+

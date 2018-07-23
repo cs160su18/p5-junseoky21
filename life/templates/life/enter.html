@@ -59,10 +59,18 @@
 			width: 100px;
 			height: 100px;
 		}
+		.ErrorToast {
+			position:fixed;
+			text-align:center;
+			width: 100vw;
+			z-index: 1;
+			font-size: 150px;
+		}
 	  </style>
 	<body>
 		<!-- Your layout here -->
 
+		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
 
 		<div id="leaderboard">
 				{% for group in groups%}
@@ -113,14 +121,32 @@
 				map.addListener("mousemove", function (ev) {
 					var latitude = ev.latLng.lat();
 					var longitude = ev.latLng.lng();
+<<<<<<< HEAD
 
 
+=======
+					if (!activeUser) {
+						noUserSelected();
+					}
+					// activeUser
+>>>>>>> 27a39c4cbc795e2f2e6805d9f3ae9fc78b2013c1
 				}); //end addListener
 
+
 			}
+			// promptUser
+			function noUserSelected(){
+				if ($('.NoUserError').is(":hidden")){
+					$('.NoUserError').fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
+				}
+			}
+<<<<<<< HEAD
 
 
 
+=======
+
+>>>>>>> 27a39c4cbc795e2f2e6805d9f3ae9fc78b2013c1
 			function showError(error) {
 				switch(error.code) {
 					case error.PERMISSION_DENIED:
