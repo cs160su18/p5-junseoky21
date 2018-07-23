@@ -117,7 +117,7 @@
 				</table>
 			</div>
 			<!-- <br> -->
-			
+
 			<!-- {{TreasureData}} -->
 		</div>
 		<div id="map"></div>
@@ -147,19 +147,19 @@
 					alert("Geolocation is not supported by this browser.");
 				}
 			}
-			
+
 			var mouseTime = false;
 			setInterval(function() {
 				mouseTime = true;
 			}, 300);
-			
+
 
 			function initMap() {
 				map = new google.maps.Map(mapID, {
 					center: {lat: 37.8716, lng: -122.2727},
 					zoom: 18
 				});
-				
+
 
 				$.ajax({
 					url: '/life/process/',
@@ -252,7 +252,6 @@
 						// userPath.setMap(map);
 						userPath.setPath(userCoords);
 					}
-					
 
 				}); //end addListener
 			}
@@ -358,15 +357,15 @@
 								users.push(name);
 								usertable.append(chunk);
 							}
-							
+
 						}
-						
+
 					},
 					failure: function(data) {
 
 					}
 				});
-			
+
 			},1000);
 			$(document).on('click', '.userlist', function(ev) {
 				// console.log(ev.currentTarget.id);
@@ -377,7 +376,7 @@
 				changeUsername(getCookie('uname'));
 			}
 			function changeUsername(uname) {
-				setCookie('uname', uname,'30'); 
+				setCookie('uname', uname,'30');
 				activeUser = uname;
 				$('#selected-user').html(activeUser);
 

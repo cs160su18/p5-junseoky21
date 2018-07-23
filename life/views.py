@@ -60,6 +60,14 @@ def processMyData(request):
             name = request.POST.get('name')
             customer = Customer.objects.filter(name=name)[0]
             LocationLogs.objects.filter(customer=customer).delete()
+        elif whatReq == 'ADD_REVIEW':
+            print("IN ADD_REVIEW")
+            form = ReviewForm(request.POST)
+            form.verified = checkLocation(form.customer, form.restaurant, .0005)
+            if form.is_valid():
+                form.save()
+            else:
+                messages.error(request, "Error")
         return HttpResponse('')
     # else:
     #     all_groups = Group.objects.all()

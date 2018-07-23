@@ -5,10 +5,14 @@
 <html>
 	<head>
     <title> Create a Review</title>
+    <script src="{% static '/life/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static '/life/vendor/js/GlobalConstants.js' %}"></script>
+		<script src="{% static '/life/vendor/js/util.js' %}"></script>
   </head>
   <body>
     <h1> Input a Review </h1>
-    <form action = "make_review" method = "post">
+    <form action = "/life/process/" method = "post" type = "ADD_REVIEW">
       <h3> Pick a Restaurant </h3> <br>
       {% for restaurant in restaurants %}
       <input type="radio" name="restaurant" value={{restaurant.name}}> {{restaurant.name}}<br>
@@ -20,9 +24,14 @@
       <input type = "text" name = "title"><br>
       <h3> Content </h3> <br>
       <input type="text" cols="40" rows="5" name = "content"><br>
-      <input type="hidden" name = "customer"> <!-- value ={user.name}} --> 
-      <input type ="hidden" name = "verified"> <!-- value = {{checkLocation(user.name,restaurant.name,.0005)}} -->
+      <input id = 'customer' type="hidden" name = "customer">
+      <input type='hidden' name='type' value = "ADD_REVIEW">
+
       <input type = "submit" value = "Submit Review"> <br>
     </form>
+    <script type = "text/javascript">
+      $('#customer-name').value = getCookie('uname')
+      alert(getCookie('uname'))
+    </script>
   </body>
 </html>
