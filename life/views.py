@@ -24,7 +24,7 @@ def processMyData(request):
 def restaurants(request):
     all_restaurants = Restaurant.objects.all()
     restAndRatings = []
-    print("jsoiahgfdsuohsfoaisdjfpiesamjofijewaorwoidpmsad")
+    # print("jsoiahgfdsuohsfoaisdjfpiesamjofijewaorwoidpmsad")
     for a in all_restaurants:
         rating = 0
         reviews = Review.objects.filter(restaurant=a)
@@ -36,6 +36,23 @@ def restaurants(request):
             rating /= counter
         restAndRatings.append([a, rating])
     return render(request, 'life/restaurants.html', {"restaurants": restAndRatings})
+
+def restaurant_reviews(request):
+    reviews = None
+    if request.GET.get('name'):
+        # message = 'You submitted: %r' % request.GET['q']
+        name = str(request.GET.get('name', None))
+        print(type(name))
+        restaurant = Restaurant.objects.filter(name=name)
+        reviews = Review.objects.filter(restaurant=restaurant)
+        print(reviews)
+    else:
+        message = 'No Restaurants Selected!!'
+        print (message)
+        reviews = ''
+    return render(request, 'life/restaurant_reviews.html', {"reviews": reviews})
+
+
 
 def enter(request):
     all_groups = Group.objects.all()
