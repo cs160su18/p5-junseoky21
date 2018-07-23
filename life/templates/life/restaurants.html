@@ -15,22 +15,27 @@
 		<script src="{% static '/life/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
         <style>
             .rows {
-                font-size: 40px;
+                font-size: 30px;
                 border: 5px solid black;
+            }
+            #restaurant-table {
+                width: 100vw;
             }
         </style>
     </head>
     
 	<body>
         <!-- Your layout here -->
-        <table>
+        <table id='restaurant-table'>
                 {% for restaurant in restaurants%}
             <tr class="rows">
                 <td>
                     <table>
                         <tr>
                             <td>Name:</td>
-                            <td><a href="/life/restaurant_reviews/?name={{restaurant.0.name}}">{{restaurant.0.name}}</a></td>
+                            <td>
+                                <a href="/life/restaurant_reviews/?name={{restaurant.0.name}}">{{restaurant.0.name}}</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>Rating:</td>

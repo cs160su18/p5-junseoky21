@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.core import serializers
+import math
 jserial = serializers.get_serializer("json")()
-
 
 def index(request):
     all_groups = Group.objects.all()
@@ -90,11 +90,12 @@ def restaurant_reviews(request):
     reviews = None
     if request.GET.get('name'):
         # message = 'You submitted: %r' % request.GET['q']
-        name = str(request.GET.get('name', None))
-        print(type(name))
-        restaurant = Restaurant.objects.filter(name=name)
+        name = request.GET.get('name')
+        # print(type(name))
+        restaurant = Restaurant.objects.filter(name=name)[0]
         reviews = Review.objects.filter(restaurant=restaurant)
-        print(reviews)
+        # print(reviews)
+        print("Verified?????" + str(checkLocation('jun', name, 0.005)))
     else:
         message = 'No Restaurants Selected!!'
         print (message)
@@ -107,7 +108,20 @@ def enter(request):
     return render(request, 'life/enter.html', {"groups": all_groups})
 
 
-
+def checkLocation(customerName, restaurantName, tolerance):
+    customer = Customer.objects.filter(name=customerName)
+    restaurant = Restaurant.objects.filter(name=restaurantName)
+    lat = restaurant[0].latitude
+    lng = restaurant[0].longitude
+    LL = LocationLogs.objects.filter(customer=customer[0])
+    for l in LL:
+        if pytagorean(lat - l.latitude, lng - l.longitude) < tolerance:
+            return True
+    return False
+        
+def pytagorean(a, b):
+    return math.sqrt(a**2 + b**2)
+    
 
 @csrf_exempt
 def make_review(request):

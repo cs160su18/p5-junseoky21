@@ -175,7 +175,7 @@
 							var lng = parsed[i]['fields']['longitude']
 							userCoords.push({lat:lat, lng:lng});
 						}
-						console.log(userCoords);
+						// console.log(userCoords);
 						userPath = new google.maps.Polyline({
 							path: userCoords,
 							geodesic: true,
@@ -207,7 +207,7 @@
 							var marker = new google.maps.Marker({
 								position: {
 									lat: lat,
-									lng: lng,
+									lng: lng
 								},
 								map: map,
 								title: name
@@ -341,7 +341,7 @@
 					url: '/life/process/',
 					type: 'POST',
 					data: {
-						type: 'GET_USERS',
+						type: 'GET_USERS'
 						// name: $('#typed-username').val(),
 					},
 					success: function(data) {
@@ -384,23 +384,13 @@
 			}
 			// setCookie(name,value,days);
 			// getCookie(name)
-			$('input[name=userid]:radio:checked').change(function() {
-				alert("Allot Thai Gayo Bhai");
-
-				if (this.value == 'jun') {
-					alert("Allot Thai Gayo Bhai");
-				}
-				else if (this.value == 'transfer') {
-					alert("Transfer Thai Gayo");
-				}
-			});
 			$('#user-submit').click(function(ev){
 				$.ajax({
 					url: '/life/process/',
 					type: 'POST',
 					data: {
 						type: 'CREATE_USER',
-						name: $('#typed-username').val(),
+						name: $('#typed-username').val()
 					},
 					success: function(data) {
 						// location.reload();
