@@ -23,8 +23,6 @@ def users(request):
     print (all_users)
     return render(request, 'life/users.html', {"users" : all_users})
 
-
-
 @csrf_exempt
 def processMyData(request):
     if request.method == 'POST':
@@ -86,6 +84,7 @@ def restaurants(request):
         restAndRatings.append([a, rating])
     return render(request, 'life/restaurants.html', {"restaurants": restAndRatings})
 
+
 def restaurant_reviews(request):
     reviews = None
     if request.GET.get('name'):
@@ -95,7 +94,7 @@ def restaurant_reviews(request):
         restaurant = Restaurant.objects.filter(name=name)[0]
         reviews = Review.objects.filter(restaurant=restaurant)
         # print(reviews)
-        print("Verified?????" + str(checkLocation('jun', name, 0.005)))
+        # print("Verified?????" + str(checkLocation('jun', name, 0.005)))
     else:
         message = 'No Restaurants Selected!!'
         print (message)
@@ -133,3 +132,17 @@ def make_review(request):
             messages.error(request, "Error")
     all_restaurants = Restaurant.objects.all()
     return render(request, 'life/makereview.html', {"restaurants": all_restaurants})
+
+def checkLocation(customerName, restaurantName, tolerance):
+    customer = Customer.objects.filter(name=customerName)
+    restaurant = Restaurant.objects.filter(name=restaurantName)
+    lat = restaurant[0].latitude
+    lng = restaurant[0].longitude
+    LL = LocationLogs.objects.filter(customer=customer[0])
+    for l in LL:
+        if pytagorean(lat - l.latitude, lng - l.longitude) < tolerance:
+            return True
+    return False
+
+def pytagorean(a, b):
+    return math.sqrt(a**2 + b**2)

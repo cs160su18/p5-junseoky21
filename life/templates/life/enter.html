@@ -86,7 +86,13 @@
 	  </style>
 	<body>
 		<!-- Your layout here -->
+<<<<<<< HEAD
+
 		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
+
+=======
+		<div class='NoUserError ErrorToast' style='display:none'>You Need to Select a User!</div>
+>>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 		<div id="leaderboard">
 			<div class='board-controller'>
 				<h2>
@@ -222,6 +228,13 @@
 				map.addListener("mousemove", function (ev) {
 					var latitude = ev.latLng.lat();
 					var longitude = ev.latLng.lng();
+<<<<<<< HEAD
+
+					if (!activeUser) {
+						noUserSelected();
+					}
+					// activeUser
+=======
 					if (!activeUser) {
 						noUserSelected();
 					}
@@ -254,6 +267,7 @@
 					}
 					
 
+>>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 				}); //end addListener
 			}
 			function updateLocations(){
@@ -275,14 +289,28 @@
 					},
 					failure: function(data) {
 
+<<<<<<< HEAD
+
+=======
 					}
 				});
+>>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 			}
-			// promptUser			
+			// promptUser
 			function noUserSelected(){
 				if ($('.NoUserError').is(":hidden")){
 					$('.NoUserError').fadeIn(400).delay(3000).fadeOut(400); //fade out after 3 seconds
 				}
+<<<<<<< HEAD
+			}
+<<<<<<< HEAD
+
+
+
+=======
+
+>>>>>>> 27a39c4cbc795e2f2e6805d9f3ae9fc78b2013c1
+=======
 			}	
 			$('#reset-locations').click(function(){
 				$.ajax({
@@ -299,6 +327,7 @@
 					}
 				});
 			});
+>>>>>>> 67619386e843d90e26b675070736f8dde6a699db
 			function showError(error) {
 				switch(error.code) {
 					case error.PERMISSION_DENIED:
